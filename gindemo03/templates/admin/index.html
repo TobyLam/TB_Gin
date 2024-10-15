@@ -1,0 +1,19 @@
+<!-- 相当与给模板定义一个名字 define end 成对出现-->
+{{ define "admin/index.html"}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <h2>后台首页</h2>
+    <!-- 定义变量 -->
+    {{$t := .title}}
+
+    <h4>
+        {{$t}}
+    </h4>
+</body>
+</html>
+{{ end }}
