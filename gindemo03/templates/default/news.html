@@ -4,8 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <title>新闻</title>
+    <link rel="stylesheet" href="static/css/base.css">
 </head>
 <body>
+{{template "public/page_header.html" .}}
     <h2>{{.title}}</h2>
     <p>
         {{.news.Title}}
@@ -13,6 +15,8 @@
     <p>
         {{.news.Content}}
     </p>
+
+{{template "public/page_footer.html" .}}
 </body>
 </html>
 {{ end }}
