@@ -5,20 +5,18 @@ import(
 	"github.com/gin-gonic/gin"
 	"html/template"
 	_"net/http"
-	"time"
+	_"time"
+	"gindemo07/models"
 )
 
-func UnixToTime(timestamp int) string {
-	t := time.Unix(int64(timestamp),0)
-	return t.Format("2006-01-02 15:04:05")
-}
+
 
 func main(){
 	//创建一个默认的路由引擎
 	r := gin.Default()
 	//自定义模板函数
 	r.SetFuncMap(template.FuncMap{
-		"UnixToTime" : UnixToTime,
+		"UnixToTime" : models.UnixToTime,
 	})
 	//加载模板
 	r.LoadHTMLGlob("templates/**/*")
