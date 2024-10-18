@@ -1,9 +1,13 @@
 package admin
 
 import (
+	"fmt"
+	"gindemo07/models"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"os"
 	"path"
+	"strconv"
 )
 
 type UserController struct{
@@ -19,13 +23,49 @@ func (con UserController) Add(c *gin.Context) {
 	c.HTML(http.StatusOK,"admin/useradd.html",gin.H{})
 }
 
+/**
+ 1.获取上传的文件
+ 2.获取后缀名 判断类型是否正确 .jpg .png .gif .jpeg
+ 3.创建图片保存目录 static/upload/20220202
+ 4.生成文件名称和文件保存的目录
+ 5.执行上传
+ */
 func (con UserController) DoUpload(c *gin.Context) {
 	username := c.PostForm("username")
+	//1.获取上传的文件
 	file,err := c.FormFile("face")
-
-	// file.Filename 获取文件名称
-	dst := path.Join("./static/upload",file.Filename)
+	dst := ""
 	if err == nil {
+		//2.获取后缀名 判断类型是否正确 .jpg .png .gif .jpeg
+		extName := path.Ext(file.Filename)
+
+		allowExtMap := map[string]bool{
+			".jpg" : true,
+			".png" : true,
+			".gif" : true,
+			".jpeg": true,
+		}
+		if _,ok := allowExtMap[extName]; !ok {
+			c.String(http.StatusOK,"上传的文件类型不合法")
+			return
+		}
+
+		//3.创建图片保存目录 static/upload/20220202
+		day := models.GetDay()
+		dir := path.Join("./static/upload",day)
+
+		err = os.MkdirAll(dir,0666)
+		if err != nil {
+			fmt.Println(err)
+			c.String(http.StatusOK,"MkdirAll失败")
+			return
+		}
+
+		//4.生成文件名称和文件保存的目录
+		fileName := strconv.FormatInt(models.GetUnix(),10) + extName
+
+		//5.执行上传
+		dst = path.Join(dir,fileName) // file.Filename 获取文件名称
 		c.SaveUploadedFile(file,dst)
 	}
 	//c.String(http.StatusOK,"执行上传")
