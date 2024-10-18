@@ -1,0 +1,18 @@
+{{ define "home/index.html" }}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="static/css/base.css">
+</head>
+<body>
+    <h1>璃月书集首页</h1>
+
+<p>{{.msg}}</p>
+    <br>
+{{UnixToTime .t}}
+</body>
+</html>
+
+{{ end }}
