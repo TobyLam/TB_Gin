@@ -15,12 +15,37 @@ type UserController struct{
 }
 
 func (con UserController) Index(c *gin.Context) {
-	c.String(http.StatusOK,"用户列表~~~~")
+
+	//查询数据库
+	/*userList := []models.User{}
+	models.DB.Find(&userList)
+	c.JSON(http.StatusOK,gin.H{
+		"result" :userList,
+	})*/
+
+	//查询age大于20的用户
+	userList := []models.User{}
+	models.DB.Where("age>20").Find(&userList)
+	c.JSON(http.StatusOK,gin.H{
+		"result":userList,
+	})
+
 }
 
 func (con UserController) Add(c *gin.Context) {
-	//c.String(http.StatusOK,"新增用户~~~~")
-	c.HTML(http.StatusOK,"admin/useradd.html",gin.H{})
+
+	user := models.User{
+		Username: "符玄",
+		Age:      50,
+		Email:    "taibusi@luofu.com",
+		AddTime:  int(models.GetUnix()),
+	}
+	models.DB.Create(&user)
+	fmt.Println(user)
+
+	c.String(http.StatusOK,"增加数据成功")
+
+	//c.HTML(http.StatusOK,"admin/useradd.html",gin.H{})
 }
 
 /**
@@ -77,8 +102,42 @@ func (con UserController) DoUpload(c *gin.Context) {
 }
 
 func (con UserController) Edit(c *gin.Context){
-	c.HTML(http.StatusOK,"admin/useredit.html",gin.H{})
+	//保存所有字段
+
+	////查询id等于6的数据
+	//user := models.User{Id:3}
+	//models.DB.Find(&user)
+	////更新数据
+	//user.Username = "太卜：符玄"
+	//user.Email = "TaiBu@luofu.com"
+	//user.AddTime = int(models.GetUnix())
+	//models.DB.Save(&user)
+
+	//更新单个列
+	/*user := models.User{}
+	models.DB.Model(&user).Where("id = ?",3).Update("age","30")*/
+
+	user := models.User{}
+	models.DB.Where("id = ?",2).Find(&user)
+	user.Username = "彦卿"
+	user.Age = 18
+	user.AddTime = int(models.GetUnix())
+
+	models.DB.Save(&user)
+
+	//c.HTML(http.StatusOK,"admin/useredit.html",gin.H{})
 }
+
+func (con UserController) Delete(c *gin.Context){
+
+	//user := models.User{Id:4}
+	//models.DB.Delete(&user)
+
+	//删除数据
+	user := models.User{}
+	models.DB.Where("username = ?","李素裳").Delete(&user)
+}
+
 
 func (con UserController) DoEdit(c *gin.Context){
 	username := c.PostForm("username")
