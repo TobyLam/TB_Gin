@@ -1,9 +1,9 @@
 package admin
 
 import (
+	"gindemo08/models"
 	"github.com/gin-gonic/gin"
 	"net/http"
-	"gindemo08/models"
 )
 
 type ArticleController struct{
@@ -12,11 +12,27 @@ type ArticleController struct{
 
 
 func (con ArticleController) Index (c *gin.Context) {
-	articleList := []models.Article{}
-	models.DB.Find(&articleList)
+	//获取所有的文章
+	//articleList := []models.Article{}
+	//models.DB.Find(&articleList)
+	//
+	//c.JSON(http.StatusOK,gin.H{
+	//	"result" : articleList,
+	//})
 
-	c.JSON(http.StatusOK,gin.H{
-		"result" : articleList,
+	//查询文章，获取文章对应的分类
+	//articleList := []models.Article{}
+	//models.DB.Preload("ArticleCate").Find(&articleList)
+	//
+	//c.JSON(200,gin.H{
+	//	"result":articleList,
+	//})
+
+	//获取所有的文章分类
+	articleCateList := []models.ArticleCate{}
+	models.DB.Preload("Article").Find(&articleCateList)
+	c.JSON(200,gin.H{
+		"result" : articleCateList,
 	})
 
 	//c.String(http.StatusOK,"文章")
